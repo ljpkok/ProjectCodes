@@ -40,7 +40,7 @@ def inference(filename, device, model, modelYOLO):
 
     # ====== 推理 ======
     print('processing live video' + filename)
-    test_movie, video_original_size = main_processing_data2('temp', filename, 10, folder_dir)
+    test_movie, video_original_size = main_processing_data2('temp', filename, 10)
     print('num of test frames=' + str(len(test_movie)))  ##所有测试的帧数
     predict_label = test_model_continues_movie_youtube(model, torch.stack(test_movie), device, folder_dir,
                                                        label_decoder_dict,
@@ -62,15 +62,16 @@ def inference(filename, device, model, modelYOLO):
     for frame in range(num_frames_to_extract):
         video.set(1, sample_start_point)
         success, image = video.read()
-        RGB_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image = Image.fromarray(RGB_img.astype('uint8'), 'RGB')
-        image_array.append(image)
+        if image is not None:
+            RGB_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = Image.fromarray(RGB_img.astype('uint8'), 'RGB')
+            image_array.append(image)
         sample_start_point = sample_start_point + 10
     video.release()
     results = modelYOLO(image_array)
     obj = results.pandas().xyxy[0].name.drop_duplicates().values.tolist()
-    print("Predicted obj: ", obj)
 
+    print("Predicted obj: ", obj)
     return predicted_label, obj
 
 

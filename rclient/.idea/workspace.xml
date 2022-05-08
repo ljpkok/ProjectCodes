@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67d26394-f289-4aeb-a0d1-98a9a34ecff6" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/../server/checkpoint/yolov5n.pt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../server/checkpoint/yolov5s.pt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../server/detect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/Preprocessing/preprocessing_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/../server/Preprocessing/preprocessing_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UploadM.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/UploadM.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../server/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/../server/inference.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/templates/upload.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +66,7 @@
       <updated>1651831180384</updated>
       <workItem from="1651831182822" duration="2985000" />
       <workItem from="1652025189582" duration="1824000" />
+      <workItem from="1652043364485" duration="483000" />
     </task>
     <servers />
   </component>

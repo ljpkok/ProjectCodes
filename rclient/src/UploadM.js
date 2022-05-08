@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import {Button, message, Upload} from 'antd';
+import {Button, message, Table, Upload} from 'antd';
 import axios from 'axios';
 import {UploadOutlined} from "@ant-design/icons";
 import { Spin, Descriptions, Row , Col} from 'antd';
@@ -48,10 +48,10 @@ class UploadM extends Component {
         'Content-Type': 'multipart/form-data'
       }
     }
-    axios.post('http://localhost:5000/upload', formData,config).then( res => {
+    axios.post('http://localhost:5000/upload', formData, config).then( res => {
       console.log(res)
       this.setState({
-        result: {class : "Still Ring", obj: "Person"}
+        result: {class : res.data.class, obj: res.data.obj}
       })
     }).catch( err => console.log(err))
   }
@@ -126,7 +126,11 @@ class UploadM extends Component {
               >
                 <Descriptions.Item label="Video Name">{this.state.fileName? this.state.fileList[0].name  : "None"}</Descriptions.Item>
                 <Descriptions.Item label="Class">    {this.state.result.class ? this.state.result.class  : "None"}</Descriptions.Item>
-                <Descriptions.Item label="Objects">{this.state.result.obj ? this.state.result.obj : "None"}</Descriptions.Item>
+                <Descriptions.Item label="Objects">
+                  {this.state.result.obj ?
+                      this.state.result.obj
+                      : "None"}
+                </Descriptions.Item>
               </Descriptions> : <Spin />}
         </Row>
 

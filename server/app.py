@@ -36,15 +36,23 @@ def allow_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    file = request.files.get('files')
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    print("Start Inference ...")
-    cl, obj = inference(filename, device, model, modelYOLO)
-    return jsonify({"class": cl, "obj": obj})
+@app.route('/', methods=['GET', 'POST'])
+def hello_world():
+    return 'Hello World!'
 
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'GET':
+        return "None"
+    else:
+        anchor = request.files
+        file = request.files.get('files')
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print("Start Inference ...")
+        cl, obj = inference(filename, device, model, modelYOLO)
+        return jsonify({"class": cl, "obj": obj})
 
 if __name__ == "__main__":
     app.run()
