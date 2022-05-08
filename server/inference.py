@@ -1,10 +1,14 @@
 # coding:utf8
-import torch
 import os
+
+import cv2
+import torch
 import numpy as np
 from utils_action_recognition import set_project_folder_dir, test_model_continues_movie_youtube
-from ResNLSTM.lrcn_model import ConvLstm
 from Preprocessing.preprocessing_data import main_processing_data2
+import torchvision
+import torchvision.transforms as T
+from PIL import Image
 
 ucf_labels = {0: 'ApplyEyeMakeup', 1: 'ApplyLipstick', 2: 'Archery', 3: 'BabyCrawling', 4: 'BalanceBeam',
               5: 'BandMarching', 6: 'BaseballPitch', 7: 'Basketball', 8: 'BasketballDunk', 9: 'BenchPress',
@@ -28,17 +32,14 @@ ucf_labels = {0: 'ApplyEyeMakeup', 1: 'ApplyLipstick', 2: 'Archery', 3: 'BabyCra
               99: 'WritingOnBoard', 100: 'YoYo'}
 
 
-def inference(filename,model):
+def inference(filename, device, model, modelYOLO):
     batch_size = 16
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
     folder_dir = set_project_folder_dir(True, 'checkpoint', use_model_folder_dir=True,
                                         mode='temp')
     label_decoder_dict = ucf_labels
 
     # ====== 推理 ======
-    test_videos_names = [filename]
-    print('processing live video' + str(test_videos_names))
+    print('processing live video' + filename)
     test_movie, video_original_size = main_processing_data2('temp', filename, 10, folder_dir)
     print('num of test frames=' + str(len(test_movie)))  ##所有测试的帧数
     predict_label = test_model_continues_movie_youtube(model, torch.stack(test_movie), device, folder_dir,
@@ -49,10 +50,29 @@ def inference(filename,model):
     label = np.argmax(count)
     predicted_label = label_decoder_dict[label]
     print('Predicted label is: ' + predicted_label)
-    print('Predicted object is: Person')
-    obj = 'Person'
+
+    # ====== YOLO ======
+
+    # Preprocess the image
+    image_array = []
+    video = cv2.VideoCapture(os.path.join('temp', 'a1.mp4'))
+    frame_count = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    num_frames_to_extract = frame_count
+    sample_start_point = 0
+    for frame in range(num_frames_to_extract):
+        video.set(1, sample_start_point)
+        success, image = video.read()
+        RGB_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = Image.fromarray(RGB_img.astype('uint8'), 'RGB')
+        image_array.append(image)
+        sample_start_point = sample_start_point + 10
+    video.release()
+    results = modelYOLO(image_array)
+    obj = results.pandas().xyxy[0].name.drop_duplicates().values.tolist()
+    print("Predicted obj: ", obj)
+
     return predicted_label, obj
 
 
 if __name__ == '__main__':
-    inference('a1.mp4')
+    inference('a1.mp4', 'cpu', 'cpu', 'cpu')

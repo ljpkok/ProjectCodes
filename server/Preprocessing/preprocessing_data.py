@@ -74,14 +74,10 @@ def main_procesing_data(args, folder_dir, sampled_video_file=None, processing_mo
             return video_test, video_original_size
 
 
-def main_processing_data2(row_data_dir, video_file_name, sampling_rate, folder_dir):
-    video_original_size_dict = {}
+def main_processing_data2(row_data_dir, video_file_name, sampling_rate):
     video_test, video_original_size = capture_and_sample_video(row_data_dir, video_file_name, 'all',
-                                                               sampling_rate, 'Not known', folder_dir,
+                                                               sampling_rate, 'Not known', '',
                                                                25, "live")
-    video_original_size_dict[video_file_name.split('.mp4')[0]] = video_original_size
-    with open(os.path.join(folder_dir, 'video_original_size_dict.pkl'), 'wb') as f:
-        pickle.dump(video_original_size_dict, f, pickle.HIGHEST_PROTOCOL)
     return video_test, video_original_size
 
 
